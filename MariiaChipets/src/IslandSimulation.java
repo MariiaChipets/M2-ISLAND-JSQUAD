@@ -1,3 +1,5 @@
+import java.util.ArrayList;
+import java.util.List;
 import java.util.concurrent.*;
 
 public class IslandSimulation {
@@ -16,11 +18,35 @@ public class IslandSimulation {
         System.out.println("Життя на острові почалося!");
 
         // Ростуть рослини (кожні 2 секунди)
-        scheduler.scheduleAtFixedRate(this::growPlantsTask, 0, 2, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(() -> {
+            try {
+                growPlantsTask();
+            } catch
+            (Exception e) {
+                System.out.println("[ПОМИЛКА] Щось з таскою росту рослин:");
+                e.printStackTrace();
+            }
+        }, 0, 2, TimeUnit.SECONDS);
+
         // Життєвий цикл тварин (кожні 2 сек)
-        scheduler.scheduleAtFixedRate(this::animalsLifeCycleTask, 0, 2, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(() -> {
+            try {
+                animalsLifeCycleTask();
+            } catch (Exception e) {
+                System.out.println("[ПОМИЛКА] Щось з таскою життєвого циклу тварин:");
+                e.printStackTrace();
+            }
+        }, 0, 2, TimeUnit.SECONDS);
+
         // Виведення статистики (кожні 2 сек).змістила на 1 сек для точності рахунку
-        scheduler.scheduleAtFixedRate(this::printStatisticsTask, 1, 2, TimeUnit.SECONDS);
+        scheduler.scheduleAtFixedRate(() -> {
+            try {
+                printStatisticsTask();
+            } catch (Exception e) {
+                System.out.println("[ПОМИЛКА] Щось із таскою виведення статистики:");
+                e.printStackTrace();
+            }
+        }, 1, 2, TimeUnit.SECONDS);
     }
 
     private void growPlantsTask() {
@@ -41,6 +67,9 @@ public class IslandSimulation {
 
                 // треба скинути прапорці розмноження перед початком нового кола
                 loc.getAnimals().forEach(Animal::resetFlags);
+
+                // Робимо копію для уникнення проблем паралельного доступу
+                List<Animal> animalsInLocation = new ArrayList<>(loc.getAnimals());
 
                 for (Animal animal : loc.getAnimals()) {
                     if (!animal.isAlive()) continue;
@@ -72,7 +101,7 @@ public class IslandSimulation {
         int totalAnimals = 0;
         int totalPlants = 0;
 
-        for (int x = 0; x <= islandMap.getWIDTH(); x++) {
+        for (int x = 0; x < islandMap.getWIDTH(); x++) {
             for (int y = 0; y <= islandMap.getHEIGHT(); y++) {
                 Location loc = islandMap.getLocations(x, y);
                 totalAnimals += loc.getAnimals().size();
@@ -94,8 +123,8 @@ public class IslandSimulation {
 
     // Первинне рандомне заселення острова тваринами та рослинами
     private void fillIslandInitialData() {
-        for (int x=0; x<islandMap.getWIDTH(); x++) {
-            for (int y=0; y<islandMap.getHEIGHT(); y++) {
+        for (int x = 0; x < islandMap.getWIDTH(); x++) {
+            for (int y = 0; y < islandMap.getHEIGHT(); y++) {
                 Location loc = islandMap.getLocations(x, y);
                 // Додамо на кожну клітинку трохи випадкових істот для старту симуляції
                 if (Math.random() < 0.3) loc.addAnimal(new Wolf());

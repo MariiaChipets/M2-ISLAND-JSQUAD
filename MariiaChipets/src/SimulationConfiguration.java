@@ -74,10 +74,12 @@ public class SimulationConfiguration {
     }
 
     public static int getEatingProbability(String predator, String prey) {
-        if (EATING_MATRIX.containsKey(predator) && EATING_MATRIX.containsKey(prey)) {
-            return EATING_MATRIX.get(predator).get(prey);
+        Map<String, Integer> diet = EATING_MATRIX.get(predator);
+        if (diet != null) {
+            // Перевіряємо, чи є жертва у меню цього хижака
+            return diet.getOrDefault(prey, 0);
         }
-        return 0; // 0% (якщо істоти немає в раціоні)
+        return 0; // Якщо істота взагалі травоїдна (немає в EATING_MATRIX) або жертва не з меню
     }
 }
 
