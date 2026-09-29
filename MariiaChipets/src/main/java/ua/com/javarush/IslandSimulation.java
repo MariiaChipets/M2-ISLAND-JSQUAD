@@ -1,3 +1,5 @@
+package main.java.ua.com.javarush;
+
 import java.util.ArrayList;
 import java.util.List;
 import java.util.concurrent.*;
@@ -104,8 +106,10 @@ public class IslandSimulation {
         for (int x = 0; x < islandMap.getWIDTH(); x++) {
             for (int y = 0; y <= islandMap.getHEIGHT(); y++) {
                 Location loc = islandMap.getLocations(x, y);
-                totalAnimals += loc.getAnimals().size();
-                totalPlants += loc.getPlants().size();
+                if (loc != null) {
+                    totalAnimals += loc.getAnimals().size();
+                    totalPlants += loc.getPlants().size();
+                }
             }
         }
 

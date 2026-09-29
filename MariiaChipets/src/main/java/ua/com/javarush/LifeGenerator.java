@@ -1,3 +1,4 @@
+package main.java.ua.com.javarush;
 
 public class LifeGenerator {
 }

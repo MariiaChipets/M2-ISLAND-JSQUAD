@@ -1,3 +1,5 @@
+package main.java.ua.com.javarush;
+
 import java.util.HashMap;
 import java.util.Map;
 

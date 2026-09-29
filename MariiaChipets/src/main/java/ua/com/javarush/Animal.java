@@ -1,3 +1,5 @@
+package main.java.ua.com.javarush;
+
 import java.util.List;
 import java.util.concurrent.ThreadLocalRandom;
 

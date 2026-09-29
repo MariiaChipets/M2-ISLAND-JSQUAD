@@ -1,3 +1,4 @@
+package main.java.ua.com.javarush;
 
 public abstract class Life {
     protected final String name;
